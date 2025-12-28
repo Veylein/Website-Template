@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Dev Learning Playground</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="components.css">
+  <style>
+    /* Helpers for live playground */
+    .playground {
+      margin-bottom: 60px;
+    }
+    .editor {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    .editor textarea {
+      width: 100%;
+      min-height: 150px;
+      font-family: monospace;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--accent);
+      margin-bottom: 10px;
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+    .run-btn {
+      align-self: flex-start;
+      margin-bottom: 10px;
+    }
+    iframe.result {
+      width: 100%;
+      min-height: 200px;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius-sm);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="section">
+    <h1>Web Dev Learning Playground</h1>
+    <p>Edit the code below each section and see results instantly!</p>
+  </header>
+
+  <!-- ================= PLAYGROUND SECTION EXAMPLE ================= -->
+  <section class="section playground">
+    <h2>Hero Section</h2>
+
+    <div class="editor">
+      <label>HTML:</label>
+      <textarea id="hero-html">
+<section class="hero" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee');">
+  <div class="hero-overlay">
+    <h1>Hero Section</h1>
+    <p>Big, bold first impression!</p>
+    <a href="#" class="btn">Click Me</a>
+  </div>
+</section>
+      </textarea>
+
+      <button class="btn run-btn" onclick="runCode('hero')">Run</button>
+      <iframe id="hero-result" class="result"></iframe>
+    </div>
+  </section>
+
+  <!-- ================= CARDS PLAYGROUND ================= -->
+  <section class="section playground">
+    <h2>Cards Section</h2>
+
+    <div class="editor">
+      <label>HTML:</label>
+      <textarea id="cards-html">
+<div class="grid grid-auto">
+  <div class="card">
+    <div class="card-header">Normal Card</div>
+    <p>Basic card.</p>
+    <a href="#">Link</a>
+  </div>
+  <div class="card glass">
+    <div class="card-header">Glass Card</div>
+    <p>Blurred glass effect.</p>
+    <a href="#" class="btn">Button</a>
+  </div>
+</div>
+      </textarea>
+
+      <button class="btn run-btn" onclick="runCode('cards')">Run</button>
+      <iframe id="cards-result" class="result"></iframe>
+    </div>
+  </section>
+
+  <!-- ================= FORMS PLAYGROUND ================= -->
+  <section class="section playground">
+    <h2>Forms Section</h2>
+
+    <div class="editor">
+      <label>HTML:</label>
+      <textarea id="forms-html">
+<form>
+  <label for="name">Name:</label>
+  <input type="text" id="name" placeholder="Your Name">
+  <label for="email">Email:</label>
+  <input type="email" id="email" placeholder="you@example.com">
+  <button type="submit" class="btn">Submit</button>
+</form>
+      </textarea>
+
+      <button class="btn run-btn" onclick="runCode('forms')">Run</button>
+      <iframe id="forms-result" class="result"></iframe>
+    </div>
+  </section>
+
+  <footer class="section">
+    <p>Web Dev Learning Playground • Built for Beginners • Live Editing Fun!</p>
+  </footer>
+
+  <!-- ================= JS FOR RUNNING CODE ================= -->
+  <script>
+    function runCode(section) {
+      const htmlCode = document.getElementById(`${section}-html`).value;
+      const iframe = document.getElementById(`${section}-result`);
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+      // Inject your base CSS links into iframe
+      iframeDoc.open();
+      iframeDoc.write(`
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="components.css">
+        ${htmlCode}
+      `);
+      iframeDoc.close();
+    }
+
+    // Optional: auto-run all editors on load
+    ['hero','cards','forms'].forEach(runCode);
+  </script>
+
+</body>
+</html>
