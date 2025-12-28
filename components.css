@@ -1,0 +1,242 @@
+/* =====================================================
+   COMPONENTS.CSS
+   Reusable UI Components
+   ===================================================== */
+
+/* =====================================================
+   BUTTON VARIANTS
+   ===================================================== */
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-outline:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #000;
+}
+
+.btn-success {
+  background: var(--success);
+  color: #000;
+}
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-main);
+}
+
+.badge.accent {
+  background: var(--accent);
+  color: #000;
+}
+
+.badge.danger {
+  background: var(--danger);
+  color: #000;
+}
+
+/* =====================================================
+   ALERTS / CALLOUTS
+   ===================================================== */
+
+.alert {
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-top: 20px;
+  background: var(--bg-card);
+  border-left: 5px solid var(--accent);
+}
+
+.alert.success {
+  border-color: var(--success);
+}
+
+.alert.danger {
+  border-color: var(--danger);
+}
+
+/* =====================================================
+   NAVBAR
+   ===================================================== */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+}
+
+.navbar a {
+  margin-left: 20px;
+  color: var(--text-main);
+}
+
+.navbar a:hover {
+  color: var(--accent);
+}
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  max-width: 400px;
+  width: 90%;
+}
+
+/* =====================================================
+   TOOLTIP
+   ===================================================== */
+
+.tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.tooltip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-main);
+  color: var(--text-main);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
+/* =====================================================
+   FORMS
+   ===================================================== */
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  background: var(--bg-card);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--accent);
+}
+
+/* =====================================================
+   CARD EXTRAS
+   ===================================================== */
+
+.card-header {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.card-footer {
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* =====================================================
+   DROPDOWN
+   ===================================================== */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  display: none;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* =====================================================
+   LEGEND (WHAT MEANS WHAT)
+   ===================================================== */
+
+/*
+LEGEND:
+
+.btn-outline / .btn-danger / .btn-success
+  → Button variations
+
+.badge
+  → Small status labels
+
+.alert
+  → Info, success, or danger callouts
+
+.navbar
+  → Top navigation bar
+
+.modal / .modal.active
+  → Centered popup modal
+
+.tooltip
+  → Hover text hint
+
+input / textarea / select
+  → Styled form controls
+
+.card-header / .card-footer
+  → Card sub-sections
+
+.dropdown
+  → Hover-based dropdown menu
+*/
