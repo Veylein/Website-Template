@@ -25,18 +25,18 @@ If you can read and copy code, you can build a website from this repo. Simple as
 
 ## 🗂 Repo Structure
 
-Website-Template
-│
-├── index.html # Static cheat sheet of all components
-├── playground.html # Live editable playground
-├── style.css # Main global styles
-├── components.css # Reusable UI components
-├── examples/ # Optional additional examples
-│ ├── hero.html
-│ ├── cards.html
-│ └── forms.html
-├── README.md # This file
-└── LICENSE
+- Website-Template
+- │
+- ├─ index.html # Static cheat sheet of all components
+- ├─ playground.html # Live editable playground
+- ├─ style.css # Main global styles
+- ├─ components.css # Reusable UI components
+- ├─ examples/ # Optional additional examples
+- │ ├─ hero.html
+- │ ├─ cards.html
+- │ └─ forms.html
+- ├─ README.md # This file
+- └─ LICENSE
 
 ---
 
