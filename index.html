@@ -1,249 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Beautiful Starter Template</title>
-
-  <!-- =========================
-       # Global Styles
-       ========================= -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Dev Cheat Sheet</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="components.css">
   <style>
-    :root {
-      --bg-dark: #0f172a;
-      --bg-card: rgba(255, 255, 255, 0.08);
-      --bg-blur: rgba(255, 255, 255, 0.12);
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --accent: #38bdf8;
-      --radius: 16px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body {
-      color: var(--text-main);
-      background-color: var(--bg-dark);
-      line-height: 1.6;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    section {
-      padding: 80px 20px;
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    h1, h2, h3 {
-      margin-bottom: 16px;
-    }
-
-    p {
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    /* =========================
-       # Background Hero Section
-       ========================= */
-    .hero {
-      min-height: 100vh;
-      background-image: url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .hero-overlay {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 60px;
-      border-radius: var(--radius);
-    }
-
-    /* =========================
-       # Image + Text (Wikipedia Style)
-       ========================= */
-    .image-text {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 30px;
-      align-items: start;
-    }
-
-    .image-text img {
-      width: 100%;
-      border-radius: var(--radius);
-    }
-
-    /* =========================
-       # Card Layout
-       ========================= */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: var(--bg-card);
-      padding: 24px;
-      border-radius: var(--radius);
-    }
-
-    .card.blurry {
-      backdrop-filter: blur(10px);
-      background: var(--bg-blur);
-    }
-
-    /* =========================
-       # Buttons & Links
-       ========================= */
-    .btn {
-      display: inline-block;
-      padding: 12px 20px;
-      border-radius: 999px;
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      margin-top: 10px;
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-      text-decoration: none;
-    }
-
-    /* =========================
-       # Legend Section
-       ========================= */
-    .legend {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius);
-      padding: 30px;
-    }
-
-    .legend ul {
-      list-style: none;
-      margin-top: 16px;
-    }
-
-    .legend li {
-      margin-bottom: 10px;
-      color: var(--text-muted);
-    }
-
-    footer {
-      text-align: center;
-      padding: 40px;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
+    /* Small helper for demo spacing */
+    section { margin-bottom: 80px; }
   </style>
 </head>
-
 <body>
 
-  <!-- =========================
-       # Hero / Background Image
-       ========================= -->
-  <section class="hero">
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero" style="background-image: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee');">
     <div class="hero-overlay">
-      <h1>Beautiful Starter Template</h1>
-      <p>A clean, modern base for new developers</p>
-      <a href="#about" class="btn">Explore</a>
+      <h1>Hero Section</h1>
+      <p>Big, bold first impression section with overlay and button.</p>
+      <a href="#cards" class="btn">Go to Cards</a>
     </div>
   </section>
 
-  <!-- =========================
-       # About Text + Image
-       ========================= -->
-  <section id="about">
-    <h2>About This Section</h2>
-
-    <div class="image-text">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/320px-JavaScript-logo.png" alt="Example Image">
-
+  <!-- ================= NAVBAR ================= -->
+  <section class="section">
+    <h2>Navbar</h2>
+    <nav class="navbar">
+      <div>Logo</div>
       <div>
-        <p>
-          This layout mimics Wikipedia-style articles where an image sits beside text.
-          It's great for explanations, documentation, or guides.
-        </p>
-
-        <p>
-          You can resize the image column or stack it on mobile later.
-        </p>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
       </div>
-    </div>
+    </nav>
+    <p style="color: var(--text-muted)">Navbar uses <code>.navbar</code> and <code>a</code> links inside it.</p>
   </section>
 
-  <!-- =========================
-       # Cards (Normal & Blurry)
-       ========================= -->
-  <section>
+  <!-- ================= CARDS ================= -->
+  <section id="cards" class="section">
     <h2>Cards</h2>
+    <div class="grid grid-auto">
 
-    <div class="card-grid">
       <div class="card">
-        <h3>Normal Card</h3>
-        <p>Simple content container with no blur.</p>
-        <a href="#">Normal link</a>
+        <div class="card-header">Normal Card</div>
+        <p>Basic content container.</p>
+        <div class="card-footer"><a href="#">Link</a></div>
       </div>
 
-      <div class="card blurry">
-        <h3>Blurry Card</h3>
-        <p>Uses backdrop-filter for a glass effect.</p>
+      <div class="card glass">
+        <div class="card-header">Glass Card</div>
+        <p>Blurry card using backdrop-filter.</p>
         <a href="#" class="btn">Button Link</a>
       </div>
 
       <div class="card">
-        <h3>Another Card</h3>
-        <p>Cards adapt automatically to screen size.</p>
+        <div class="card-header">Card + Badge</div>
+        <p>Combine cards with badges & alerts.</p>
+        <span class="badge accent">NEW</span>
+        <div class="alert success">Success alert!</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= FORMS ================= -->
+  <section class="section">
+    <h2>Forms</h2>
+    <form>
+      <label for="name">Name:</label>
+      <input type="text" id="name" placeholder="Your Name">
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="you@example.com">
+
+      <label for="role">Role:</label>
+      <select id="role">
+        <option value="">Select...</option>
+        <option value="student">Student</option>
+        <option value="developer">Developer</option>
+        <option value="teacher">Teacher</option>
+      </select>
+
+      <label for="message">Message:</label>
+      <textarea id="message" rows="4" placeholder="Your message"></textarea>
+
+      <button type="submit" class="btn">Submit</button>
+    </form>
+  </section>
+
+  <!-- ================= ALERTS & BADGES ================= -->
+  <section class="section">
+    <h2>Alerts & Badges</h2>
+
+    <div class="alert">Default alert</div>
+    <div class="alert success">Success alert</div>
+    <div class="alert danger">Danger alert</div>
+
+    <div style="margin-top: 20px;">
+      <span class="badge">Default Badge</span>
+      <span class="badge accent">Accent Badge</span>
+      <span class="badge danger">Danger Badge</span>
+    </div>
+  </section>
+
+  <!-- ================= TOOLTIP ================= -->
+  <section class="section">
+    <h2>Tooltip</h2>
+    <p>Hover over this <span class="tooltip" data-tip="I am a tooltip!">text</span> to see a tooltip.</p>
+  </section>
+
+  <!-- ================= DROPDOWN ================= -->
+  <section class="section">
+    <h2>Dropdown</h2>
+    <div class="dropdown">
+      <button class="btn">Hover me</button>
+      <div class="dropdown-menu">
+        <a href="#">Option 1</a><br>
+        <a href="#">Option 2</a><br>
+        <a href="#">Option 3</a>
       </div>
     </div>
   </section>
 
-  <!-- =========================
-       # Legend
-       ========================= -->
-  <section>
-    <h2>Legend</h2>
+  <!-- ================= MODAL ================= -->
+  <section class="section">
+    <h2>Modal (popup)</h2>
+    <button class="btn" onclick="document.getElementById('demoModal').classList.add('active')">Open Modal</button>
 
-    <div class="legend">
-      <ul>
-        <li><strong>.hero</strong> → Full-screen background image section</li>
-        <li><strong>.image-text</strong> → Image + text layout (Wikipedia style)</li>
-        <li><strong>.card</strong> → Standard content card</li>
-        <li><strong>.card.blurry</strong> → Glassmorphism / blurred card</li>
-        <li><strong>.btn</strong> → Button-style link</li>
-        <li><strong>a</strong> → Normal text link</li>
-        <li><strong>:root</strong> → Global theme variables</li>
-      </ul>
+    <div id="demoModal" class="modal">
+      <div class="modal-box">
+        <h3>Modal Title</h3>
+        <p>This is a modal window. Click outside or the close button to hide it.</p>
+        <button class="btn" onclick="document.getElementById('demoModal').classList.remove('active')">Close</button>
+      </div>
     </div>
   </section>
 
-  <!-- =========================
-       # Footer
-       ========================= -->
+  <!-- ================= LEGEND ================= -->
+  <section class="section legend">
+    <h2>Legend / Cheat Sheet</h2>
+    <ul>
+      <li><code>.hero</code> → Full-screen background section</li>
+      <li><code>.hero-overlay</code> → Overlay for hero text readability</li>
+      <li><code>.navbar</code> → Top navigation bar</li>
+      <li><code>.card</code> → Content container card</li>
+      <li><code>.card.glass</code> → Blurry glass card</li>
+      <li><code>.btn</code> → Button-style link</li>
+      <li><code>.alert</code> → Info / success / danger alert</li>
+      <li><code>.badge</code> → Small status label</li>
+      <li><code>.tooltip</code> → Hover hint</li>
+      <li><code>.dropdown</code> → Hover-based menu</li>
+      <li><code>.modal</code> → Popup modal</li>
+    </ul>
+  </section>
+
   <footer>
-    Built for new devs • Simple • Clean • Extendable
+    Web Dev Cheat Sheet • Built for Beginners • All Components in One Place
   </footer>
+
+  <!-- Small JS for Modal -->
+  <script>
+    // Close modal if click outside box
+    document.getElementById('demoModal').addEventListener('click', function(e){
+      if(e.target.id === 'demoModal'){
+        this.classList.remove('active');
+      }
+    });
+  </script>
 
 </body>
 </html>
