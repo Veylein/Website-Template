@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards Example</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../components.css">
+</head>
+<body>
+
+  <section class="section">
+    <h1>Cards</h1>
+    <div class="grid grid-auto">
+
+      <!-- Normal Card -->
+      <div class="card">
+        <div class="card-header">Normal Card</div>
+        <p>This is a simple card with default styling.</p>
+        <div class="card-footer"><a href="#">Read More</a></div>
+      </div>
+
+      <!-- Blurry / Glass Card -->
+      <div class="card glass">
+        <div class="card-header">Glass Card</div>
+        <p>This card has a blurred glass effect using <code>backdrop-filter</code>.</p>
+        <a href="#" class="btn">Button Link</a>
+      </div>
+
+      <!-- Card with Badge & Alert -->
+      <div class="card">
+        <div class="card-header">
+          Advanced Card <span class="badge accent">NEW</span>
+        </div>
+        <p>You can combine cards with badges, alerts, and more components.</p>
+        <div class="alert success">Success alert inside a card!</div>
+      </div>
+
+    </div>
+
+    <!-- Explanation -->
+    <p style="margin-top: 30px; color: var(--text-muted);">
+      Use <code>.card</code> for containers. Add <code>.glass</code> for blurred effect.
+    </p>
+  </section>
+
+</body>
+</html>
