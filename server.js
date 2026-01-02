@@ -48,12 +48,22 @@ async function readMessages() {
   await ensureDataFile();
   const raw = await fsp.readFile(DATA_FILE, 'utf8');
   const safe = raw && raw.trim() ? raw : '[]';
-  return JSON.parse(safe);
+  try {
+    return JSON.parse(safe);
+  } catch {
+    await fsp.writeFile(DATA_FILE, '[]', 'utf8');
+    return [];
+  }
 }
+
+let writeQueue = Promise.resolve();
 
 async function writeMessages(messages) {
   await ensureDataFile();
-  await fsp.writeFile(DATA_FILE, JSON.stringify(messages, null, 2));
+  writeQueue = writeQueue.then(() =>
+    fsp.writeFile(DATA_FILE, JSON.stringify(messages, null, 2))
+  );
+  return writeQueue;
 }
 
 function sendJSON(res, statusCode, payload) {
@@ -109,24 +119,25 @@ async function handleApi(req, res, url) {
   if (req.method === 'POST') {
     try {
       const body = await parseBody(req);
+      const rawMessage = String(body.message ?? '');
+      if (rawMessage.length > 1000) {
+        sendJSON(res, 400, { error: 'Message is too long. Keep it under 1000 characters.' });
+        return true;
+      }
+
       const name = sanitize(body.name);
       const email = sanitize(body.email);
       const role = sanitize(body.role || 'guest');
-      const message = sanitize(body.message);
+      const message = sanitize(rawMessage);
 
       if (!name || !email || !message) {
         sendJSON(res, 400, { error: 'Name, email, and message are required.' });
         return true;
       }
 
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
       if (!emailPattern.test(email)) {
         sendJSON(res, 400, { error: 'Please provide a valid email.' });
-        return true;
-      }
-
-      if (message.length > 1000) {
-        sendJSON(res, 400, { error: 'Message is too long. Keep it under 1000 characters.' });
         return true;
       }
 
