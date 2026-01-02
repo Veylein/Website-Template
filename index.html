@@ -227,7 +227,9 @@
 
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        statusEl.hidden = true;
+        if (statusEl) {
+          statusEl.hidden = true;
+        }
 
         const payload = {
           name: form.querySelector('#name')?.value || '',

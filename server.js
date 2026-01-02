@@ -79,9 +79,12 @@ function sendJSON(res, statusCode, payload) {
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
+    let aborted = false;
 
     req.on('data', chunk => {
+      if (aborted) return;
       if (body.length + chunk.length > MAX_BODY_SIZE) {
+        aborted = true;
         reject(new Error('Payload too large'));
         req.destroy();
         return;
@@ -90,6 +93,7 @@ function parseBody(req) {
     });
 
     req.on('end', () => {
+      if (aborted) return;
       try {
         const parsed = body ? JSON.parse(body) : {};
         resolve(parsed);
@@ -119,15 +123,10 @@ async function handleApi(req, res, url) {
   if (req.method === 'POST') {
     try {
       const body = await parseBody(req);
-      const rawMessage = String(body.message ?? '');
-      if (rawMessage.length > 1000) {
-        sendJSON(res, 400, { error: 'Message is too long. Keep it under 1000 characters.' });
-        return true;
-      }
-
       const name = sanitize(body.name);
       const email = sanitize(body.email);
       const role = sanitize(body.role || 'guest');
+      const rawMessage = String(body.message ?? '');
       const message = sanitize(rawMessage);
 
       if (!name || !email || !message) {
@@ -138,6 +137,11 @@ async function handleApi(req, res, url) {
       const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
       if (!emailPattern.test(email)) {
         sendJSON(res, 400, { error: 'Please provide a valid email.' });
+        return true;
+      }
+
+      if (message.length > 1000) {
+        sendJSON(res, 400, { error: 'Message is too long. Keep it under 1000 characters.' });
         return true;
       }
 
@@ -167,7 +171,9 @@ async function handleApi(req, res, url) {
 
 function serveStatic(req, res, url) {
   const requestedPath = url.pathname === '/' ? '/index.html' : url.pathname;
-  const safePath = path.resolve(PUBLIC_DIR, '.' + decodeURIComponent(requestedPath));
+  const decoded = decodeURIComponent(requestedPath);
+  const normalized = path.normalize(decoded);
+  const safePath = path.resolve(PUBLIC_DIR, '.' + normalized);
 
   if (!safePath.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
