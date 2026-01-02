@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP Full-Stack Experience</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="components.css">
+  <style>
+    .shell {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px 20px 80px;
+      display: grid;
+      gap: 24px;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
+    .topbar .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--bg-glass);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .grid-two {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    .card.tight {
+      padding: 16px;
+    }
+    .card-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+    .badge-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: var(--bg-glass);
+      font-size: 12px;
+    }
+    .cards-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .dashboard-stack .cards-grid {
+      grid-template-columns: 1fr;
+    }
+    .status {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 44px;
+    }
+    .log-list {
+      max-height: 260px;
+      overflow: auto;
+      border-radius: var(--radius-sm);
+    }
+    .theme-dots {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .theme-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s ease, border 0.2s ease;
+    }
+    .theme-dot[data-active="true"] {
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+    .sr-only { position:absolute; left:-9999px; }
+  </style>
+</head>
+<body>
+  <div class="hero" style="background-image: linear-gradient(120deg, rgba(56,189,248,0.18), rgba(59,130,246,0.12)), url('https://images.unsplash.com/photo-1460925895917-afdab827c52f'); min-height: 60vh;">
+    <div class="hero-overlay">
+      <h1>Beyond VIP Dashboard</h1>
+      <p>Responsive, themed, persistent, and interactive—built with zero external dependencies.</p>
+      <div class="actions">
+        <a class="btn" href="#app">Open App</a>
+        <a class="btn btn-outline" href="index.html">See Components</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell" id="app">
+    <div class="topbar" aria-live="polite">
+      <div class="pill">
+        <span id="userLabel">Guest mode</span>
+        <span class="badge accent" id="roleLabel">Visitor</span>
+      </div>
+      <div class="actions">
+        <div class="theme-dots" aria-label="Theme toggle">
+          <button class="theme-dot" style="background:#0f172a" data-theme="dark" aria-label="Dark theme"></button>
+          <button class="theme-dot" style="background:#f8fafc" data-theme="light" aria-label="Light theme"></button>
+          <button class="theme-dot" style="background:#0b1324" data-theme="neutral" aria-label="Neutral theme"></button>
+        </div>
+        <button class="btn-outline" id="toggleModalBtn">Show Modal</button>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </div>
+
+    <div class="grid-two">
+      <div class="card tight">
+        <div class="card-header-row">
+          <div>
+            <div class="badge-inline accent">Auth</div>
+            <div class="card-header">Sign up</div>
+          </div>
+          <span class="tooltip" data-tip="Passwords stay local & hashed">?</span>
+        </div>
+        <form id="signupForm">
+          <label>Email</label>
+          <input type="email" name="email" required placeholder="you@example.com">
+          <label>Password</label>
+          <input type="password" name="password" required minlength="6" placeholder="At least 6 characters">
+          <label>Preferred Theme</label>
+          <select name="theme">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="neutral">Neutral</option>
+          </select>
+          <button class="btn" type="submit">Create account</button>
+        </form>
+      </div>
+
+      <div class="card tight">
+        <div class="card-header-row">
+          <div>
+            <div class="badge-inline">Auth</div>
+            <div class="card-header">Login</div>
+          </div>
+          <span class="tooltip" data-tip="Sessions are cookie-based">?</span>
+        </div>
+        <form id="loginForm">
+          <label>Email</label>
+          <input type="email" name="email" required placeholder="you@example.com">
+          <label>Password</label>
+          <input type="password" name="password" required placeholder="Password">
+          <button class="btn" type="submit">Login</button>
+        </form>
+        <form id="resetForm" style="margin-top:12px;">
+          <label>Request password reset</label>
+          <div class="flex center" style="gap:8px;">
+            <input type="email" name="email" placeholder="you@example.com">
+            <button class="btn-outline" type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header-row">
+        <div>
+          <div class="badge-inline accent">Dashboard</div>
+          <h3>Customizable dashboard</h3>
+        </div>
+        <div class="actions">
+          <label class="badge-inline">
+            Layout
+            <select id="layoutSelect">
+              <option value="grid">Grid</option>
+              <option value="stack">Stack</option>
+            </select>
+          </label>
+          <label class="badge-inline">
+            Accent
+            <input type="color" id="accentPicker" value="#38bdf8" aria-label="Accent color picker">
+          </label>
+          <label class="badge-inline">
+            Font
+            <select id="fontSelect">
+              <option value="system">System</option>
+              <option value="serif">Serif</option>
+              <option value="mono">Mono</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <p>Create, rearrange, and auto-save your cards. Changes persist to the backend and are reloaded per account.</p>
+      <div class="grid-two">
+        <form id="cardForm" class="card tight">
+          <div class="card-header">New card</div>
+          <label>Title</label>
+          <input name="title" placeholder="My card" required>
+          <label>Content</label>
+          <textarea name="content" rows="3" placeholder="Details, links, or goals"></textarea>
+          <label>Style</label>
+          <select name="layout">
+            <option value="default">Default</option>
+            <option value="glass">Glass</option>
+            <option value="accent">Accent</option>
+          </select>
+          <button class="btn" type="submit">Save card</button>
+        </form>
+
+        <div class="card tight dashboard-stack" id="dashboardArea">
+          <div class="card-header-row">
+            <div class="card-header">Your cards</div>
+            <span class="badge">Realtime</span>
+          </div>
+          <div id="cardsEmpty" class="alert" aria-live="polite">No cards yet. Create one to get started.</div>
+          <div class="cards-grid" id="cardList" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-two">
+      <div class="card tight">
+        <div class="card-header">Progress (autosaves)</div>
+        <p>Type anything—notes, wins, todos. It auto-saves and syncs to your account.</p>
+        <textarea id="progressNotes" rows="6" placeholder="Today I built a responsive dashboard..."></textarea>
+        <div class="status" id="statusBar" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="card tight">
+        <div class="card-header-row">
+          <div>
+            <div class="badge-inline">Live</div>
+            <div class="card-header">Notifications</div>
+          </div>
+          <span class="tooltip" data-tip="Powered by polling">ℹ</span>
+        </div>
+        <ul class="list" id="notificationList" aria-live="polite"></ul>
+      </div>
+    </div>
+
+    <div class="card tight" id="adminPanel" hidden>
+      <div class="card-header-row">
+        <div>
+          <div class="badge-inline danger">Admin</div>
+          <div class="card-header">Activity & error logs</div>
+        </div>
+        <span class="tooltip" data-tip="Admins only">🔒</span>
+      </div>
+      <div class="log-list">
+        <ul class="list" id="logList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="experienceModal" class="modal" aria-hidden="true">
+    <div class="modal-box">
+      <h3>Premium modal</h3>
+      <p>Keyboard friendly, focus trapped, and fully themed.</p>
+      <button class="btn" id="closeModalBtn">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      user: null,
+      cards: [],
+      settings: { theme: 'dark', accent: '#38bdf8', font: 'system', dashboardLayout: 'grid' },
+      progress: {},
+      lastEvent: 0
+    };
+
+    const els = {
+      userLabel: document.getElementById('userLabel'),
+      roleLabel: document.getElementById('roleLabel'),
+      logoutBtn: document.getElementById('logoutBtn'),
+      signupForm: document.getElementById('signupForm'),
+      loginForm: document.getElementById('loginForm'),
+      resetForm: document.getElementById('resetForm'),
+      cardForm: document.getElementById('cardForm'),
+      cardList: document.getElementById('cardList'),
+      cardsEmpty: document.getElementById('cardsEmpty'),
+      layoutSelect: document.getElementById('layoutSelect'),
+      accentPicker: document.getElementById('accentPicker'),
+      fontSelect: document.getElementById('fontSelect'),
+      progressNotes: document.getElementById('progressNotes'),
+      statusBar: document.getElementById('statusBar'),
+      logList: document.getElementById('logList'),
+      notificationList: document.getElementById('notificationList'),
+      adminPanel: document.getElementById('adminPanel'),
+      dashboardArea: document.getElementById('dashboardArea'),
+      modal: document.getElementById('experienceModal'),
+      toggleModalBtn: document.getElementById('toggleModalBtn'),
+      closeModalBtn: document.getElementById('closeModalBtn')
+    };
+
+    function setStatus(message, ok = true) {
+      if (!els.statusBar) return;
+      els.statusBar.textContent = message;
+      els.statusBar.className = ok ? 'status alert success' : 'status alert danger';
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      state.settings.theme = theme;
+      localStorage.setItem('theme', theme);
+      document.querySelectorAll('.theme-dot').forEach(dot => {
+        dot.dataset.active = dot.dataset.theme === theme;
+      });
+    }
+
+    function applyAccent(accent) {
+      state.settings.accent = accent;
+      document.documentElement.style.setProperty('--accent', accent);
+      els.accentPicker.value = accent;
+    }
+
+    function applyFont(font) {
+      state.settings.font = font;
+      const body = document.body;
+      const map = {
+        system: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        serif: 'Georgia, Cambria, "Times New Roman", serif',
+        mono: '"SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+      };
+      body.style.fontFamily = map[font] || map.system;
+    }
+
+    async function api(path, options = {}) {
+      const res = await fetch(path, {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        ...options
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    async function loadSession() {
+      try {
+        const { user } = await api('/api/auth/me', { method: 'GET' });
+        state.user = user;
+        if (user?.settings) {
+          state.settings = { ...state.settings, ...user.settings };
+          state.progress = user.progress || {};
+        }
+      } catch {
+        state.user = null;
+      }
+      updateUI();
+    }
+
+    function updateUI() {
+      const userName = state.user ? state.user.email : 'Guest mode';
+      els.userLabel.textContent = userName;
+      els.roleLabel.textContent = state.user ? (state.user.role || 'member') : 'Visitor';
+      applyTheme(state.settings.theme || localStorage.getItem('theme') || 'dark');
+      applyAccent(state.settings.accent || '#38bdf8');
+      applyFont(state.settings.font || 'system');
+      els.layoutSelect.value = state.settings.dashboardLayout || 'grid';
+      els.dashboardArea.classList.toggle('dashboard-stack', state.settings.dashboardLayout === 'stack');
+      if (els.progressNotes) {
+        els.progressNotes.value = state.progress.notes || '';
+      }
+      if (state.user?.role === 'admin') {
+        els.adminPanel.hidden = false;
+        loadLogs();
+      } else {
+        els.adminPanel.hidden = true;
+      }
+      if (state.user) {
+        loadCards();
+      } else {
+        state.cards = [];
+        renderCards();
+      }
+    }
+
+    function renderCards() {
+      if (!els.cardList) return;
+      els.cardList.innerHTML = '';
+      if (!state.cards.length) {
+        els.cardsEmpty.hidden = false;
+        return;
+      }
+      els.cardsEmpty.hidden = true;
+      state.cards.forEach(card => {
+        const node = document.createElement('article');
+        node.className = `card ${card.layout === 'glass' ? 'glass' : ''} ${card.layout === 'accent' ? 'alert' : ''}`;
+        node.innerHTML = `
+          <div class="card-header-row">
+            <strong>${card.title}</strong>
+            <div class="actions">
+              <button class="btn-outline" data-action="update" data-id="${card.id}">Edit</button>
+              <button class="btn-danger" data-action="delete" data-id="${card.id}">Delete</button>
+            </div>
+          </div>
+          <p>${card.content || 'No content'}</p>
+          <small class="text-muted">${new Date(card.updatedAt).toLocaleString()}</small>
+        `;
+        els.cardList.appendChild(node);
+      });
+    }
+
+    async function loadCards() {
+      try {
+        const { cards } = await api('/api/cards');
+        state.cards = cards || [];
+        renderCards();
+      } catch (err) {
+        setStatus(err.message, false);
+      }
+    }
+
+    async function loadLogs() {
+      if (!state.user?.role || state.user.role !== 'admin') return;
+      try {
+        const { logs } = await api('/api/admin/logs');
+        els.logList.innerHTML = '';
+        logs.forEach(log => {
+          const li = document.createElement('li');
+          li.className = 'card tight';
+          li.innerHTML = `<strong>${log.action}</strong><br><small>${new Date(log.timestamp).toLocaleString()}</small><p>${log.detail}</p>`;
+          els.logList.appendChild(li);
+        });
+      } catch (err) {
+        setStatus(err.message, false);
+      }
+    }
+
+    async function syncSettings(partial = {}) {
+      if (!state.user) return;
+      state.settings = { ...state.settings, ...(partial.settings || {}) };
+      state.progress = { ...state.progress, ...(partial.progress || {}) };
+      await api('/api/me/settings', {
+        method: 'PUT',
+        body: JSON.stringify({ settings: state.settings, progress: state.progress })
+      });
+    }
+
+    async function pollNotifications() {
+      try {
+        const { events, now } = await api(`/api/live/notifications?since=${state.lastEvent}`);
+        state.lastEvent = now;
+        if (events?.length) {
+          events.slice(-5).forEach(ev => {
+            const li = document.createElement('li');
+            li.className = 'alert';
+            li.innerHTML = `<strong>${ev.action}</strong><br><small>${new Date(ev.timestamp).toLocaleTimeString()}</small><p>${ev.detail || ''}</p>`;
+            els.notificationList.prepend(li);
+            if (els.notificationList.children.length > 6) {
+              els.notificationList.lastChild.remove();
+            }
+          });
+        }
+      } catch {
+        /* ignore background errors */
+      }
+    }
+
+    function bindEvents() {
+      els.logoutBtn.addEventListener('click', async () => {
+        await api('/api/auth/logout', { method: 'POST' }).catch(() => {});
+        state.user = null;
+        state.cards = [];
+        updateUI();
+      });
+
+      els.signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        try {
+          const data = await api('/api/auth/signup', {
+            method: 'POST',
+            body: JSON.stringify(Object.fromEntries(form))
+          });
+          state.user = data.user;
+          setStatus('Account created. You are signed in.');
+          await loadSession();
+        } catch (err) {
+          setStatus(err.message, false);
+        }
+      });
+
+      els.loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        try {
+          const data = await api('/api/auth/login', {
+            method: 'POST',
+            body: JSON.stringify(Object.fromEntries(form))
+          });
+          state.user = data.user;
+          setStatus('Welcome back!');
+          await loadSession();
+        } catch (err) {
+          setStatus(err.message, false);
+        }
+      });
+
+      els.resetForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        try {
+          await api('/api/auth/request-reset', { method: 'POST', body: JSON.stringify({ email }) });
+          setStatus('Reset link simulated. Check logs for token.');
+        } catch (err) {
+          setStatus(err.message, false);
+        }
+      });
+
+      els.cardForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        try {
+          await api('/api/cards', {
+            method: 'POST',
+            body: JSON.stringify(Object.fromEntries(form))
+          });
+          setStatus('Card saved.');
+          e.target.reset();
+          loadCards();
+        } catch (err) {
+          setStatus(err.message, false);
+        }
+      });
+
+      els.cardList.addEventListener('click', async (e) => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        if (btn.dataset.action === 'delete') {
+          await api(`/api/cards/${id}`, { method: 'DELETE' }).catch(() => {});
+          state.cards = state.cards.filter(c => c.id !== id);
+          renderCards();
+        }
+        if (btn.dataset.action === 'update') {
+          const card = state.cards.find(c => c.id === id);
+          const nextTitle = prompt('Update title', card?.title || '');
+          if (nextTitle !== null) {
+            await api(`/api/cards/${id}`, {
+              method: 'PUT',
+              body: JSON.stringify({ title: nextTitle })
+            });
+            loadCards();
+          }
+        }
+      });
+
+      els.layoutSelect.addEventListener('change', async (e) => {
+        state.settings.dashboardLayout = e.target.value;
+        els.dashboardArea.classList.toggle('dashboard-stack', e.target.value === 'stack');
+        await syncSettings({ settings: { dashboardLayout: e.target.value } });
+      });
+
+      els.accentPicker.addEventListener('input', async (e) => {
+        applyAccent(e.target.value);
+        await syncSettings({ settings: { accent: e.target.value } });
+      });
+
+      els.fontSelect.addEventListener('change', async (e) => {
+        applyFont(e.target.value);
+        await syncSettings({ settings: { font: e.target.value } });
+      });
+
+      els.progressNotes.addEventListener('input', (e) => {
+        state.progress.notes = e.target.value;
+        setStatus('Saving...');
+        clearTimeout(els.progressNotes._saveTimer);
+        els.progressNotes._saveTimer = setTimeout(async () => {
+          try {
+            await syncSettings({ progress: { notes: state.progress.notes } });
+            setStatus('Progress saved.');
+          } catch (err) {
+            setStatus(err.message, false);
+          }
+        }, 400);
+      });
+
+      document.querySelectorAll('.theme-dot').forEach((dot) => {
+        dot.addEventListener('click', async () => {
+          applyTheme(dot.dataset.theme);
+          await syncSettings({ settings: { theme: dot.dataset.theme } }).catch(() => {});
+        });
+      });
+
+      els.toggleModalBtn.addEventListener('click', () => {
+        els.modal.classList.add('active');
+        els.modal.setAttribute('aria-hidden', 'false');
+        els.closeModalBtn.focus();
+      });
+
+      els.closeModalBtn.addEventListener('click', () => {
+        els.modal.classList.remove('active');
+        els.modal.setAttribute('aria-hidden', 'true');
+      });
+
+      els.modal.addEventListener('click', (e) => {
+        if (e.target === els.modal) {
+          els.modal.classList.remove('active');
+          els.modal.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      bindEvents();
+      applyTheme(localStorage.getItem('theme') || 'dark');
+      await loadSession();
+      setInterval(pollNotifications, 6000);
+    });
+  </script>
+</body>
+</html>

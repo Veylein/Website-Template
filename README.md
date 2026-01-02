@@ -20,6 +20,7 @@ If you can read and copy code, you can build a website from this repo. Simple as
 
 - **Static Cheat Sheet**: [index.html](index.html) – see all components in one place  
 - **Interactive Playground**: [playground.html](playground.html) – edit code and see results live  
+- **Full App Demo**: [app.html](app.html) – themed auth, cards, progress saving, and admin logs backed by the tiny Node.js API  
 
 ---
 
@@ -70,15 +71,22 @@ Each component includes **inline comments** in the code so you can understand it
 
 ## 🗄️ Optional Backend + Data
 
-Want to save form submissions? A tiny Node.js backend is included:
+Want to save form submissions and account data? A tiny Node.js backend is included:
 
 1. Run `node server.js`
 2. Visit [http://localhost:3000](http://localhost:3000)
 3. Submit the form on the page — messages are stored in `data/messages.json` and shown back instantly.
+4. Try [http://localhost:3000/app.html](http://localhost:3000/app.html) for the full experience (signup/login, cards, settings, logs).
 
 Endpoints:
 - `GET /api/messages` → returns saved messages  
 - `POST /api/messages` → accepts `{ name, email, role, message }`
+- `POST /api/auth/signup` → create an account (hashes password, first user is admin)  
+- `POST /api/auth/login` / `POST /api/auth/logout` / `GET /api/auth/me`  
+- `POST /api/auth/request-reset` + `POST /api/auth/reset` → simple password reset flow  
+- `GET|PUT /api/me/settings` → theme/font/layout + progress per user  
+- `GET|POST|PUT|DELETE /api/cards` → cards saved per account  
+- `GET /api/admin/logs` → admin-only activity stream  
 
 No external packages are required.
 
