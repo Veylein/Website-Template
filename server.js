@@ -22,6 +22,10 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
+function sanitize(value) {
+  return String(value || '').trim().replace(/[<>]/g, '');
+}
+
 function ensureDataFile() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -97,17 +101,17 @@ function handleApi(req, res, url) {
   if (req.method === 'POST') {
     parseBody(req)
       .then(body => {
-        const name = (body.name || '').trim();
-        const email = (body.email || '').trim();
-        const role = (body.role || 'guest').trim();
-        const message = (body.message || '').trim();
+        const name = sanitize(body.name);
+        const email = sanitize(body.email);
+        const role = sanitize(body.role || 'guest');
+        const message = sanitize(body.message);
 
         if (!name || !email || !message) {
           sendJSON(res, 400, { error: 'Name, email, and message are required.' });
           return;
         }
 
-        const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
         if (!emailPattern.test(email)) {
           sendJSON(res, 400, { error: 'Please provide a valid email.' });
           return;
@@ -143,7 +147,7 @@ function handleApi(req, res, url) {
 
 function serveStatic(req, res, url) {
   const requestedPath = url.pathname === '/' ? '/index.html' : url.pathname;
-  const safePath = path.normalize(path.join(PUBLIC_DIR, decodeURIComponent(requestedPath)));
+  const safePath = path.resolve(PUBLIC_DIR, '.' + decodeURIComponent(requestedPath));
 
   if (!safePath.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
