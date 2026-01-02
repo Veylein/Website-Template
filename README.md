@@ -68,6 +68,22 @@ Each component includes **inline comments** in the code so you can understand it
 
 ---
 
+## 🗄️ Optional Backend + Data
+
+Want to save form submissions? A tiny Node.js backend is included:
+
+1. Run `node server.js`
+2. Visit [http://localhost:3000](http://localhost:3000)
+3. Submit the form on the page — messages are stored in `data/messages.json` and shown back instantly.
+
+Endpoints:
+- `GET /api/messages` → returns saved messages  
+- `POST /api/messages` → accepts `{ name, email, role, message }`
+
+No external packages are required.
+
+---
+
 ## 🏷 License
 
 MIT License – Feel free to use, share, or remix this repository.

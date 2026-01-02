@@ -69,7 +69,7 @@
   <!-- ================= FORMS ================= -->
   <section class="section">
     <h2>Forms</h2>
-    <form>
+    <form id="contactForm">
       <label for="name">Name:</label>
       <input type="text" id="name" placeholder="Your Name">
 
@@ -89,6 +89,13 @@
 
       <button type="submit" class="btn">Submit</button>
     </form>
+
+    <div id="formStatus" class="alert" hidden></div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header">Saved Messages (latest first)</div>
+      <ul id="messageList" class="message-list"></ul>
+    </div>
   </section>
 
   <!-- ================= ALERTS & BADGES ================= -->
@@ -169,6 +176,91 @@
         this.classList.remove('active');
       }
     });
+
+    // Simple frontend -> backend integration for form submissions
+    (function() {
+      const form = document.getElementById('contactForm');
+      const statusEl = document.getElementById('formStatus');
+      const listEl = document.getElementById('messageList');
+
+      if (!form) return;
+
+      function setStatus(message, ok = true) {
+        if (!statusEl) return;
+        statusEl.textContent = message;
+        statusEl.hidden = false;
+        statusEl.className = ok ? 'alert success' : 'alert danger';
+      }
+
+      function renderMessages(messages) {
+        if (!listEl) return;
+        listEl.innerHTML = '';
+        if (!messages.length) {
+          const li = document.createElement('li');
+          li.textContent = 'No messages yet. Submit the form to add one.';
+          listEl.appendChild(li);
+          return;
+        }
+
+        for (let i = messages.length - 1; i >= 0; i -= 1) {
+          const entry = messages[i];
+          const li = document.createElement('li');
+          const meta = document.createElement('div');
+          meta.className = 'message-meta';
+          meta.textContent = `${entry.name} • ${entry.role || 'guest'} • ${new Date(entry.createdAt).toLocaleString()}`;
+          const text = document.createElement('p');
+          text.textContent = entry.message;
+          li.appendChild(meta);
+          li.appendChild(text);
+          listEl.appendChild(li);
+        }
+      }
+
+      async function refreshMessages() {
+        try {
+          const res = await fetch('/api/messages');
+          const data = await res.json();
+          renderMessages(Array.isArray(data.messages) ? data.messages : []);
+        } catch (err) {
+          console.error('Unable to load messages', err);
+        }
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (statusEl) {
+          statusEl.hidden = true;
+        }
+
+        const payload = {
+          name: form.querySelector('#name')?.value || '',
+          email: form.querySelector('#email')?.value || '',
+          role: form.querySelector('#role')?.value || '',
+          message: form.querySelector('#message')?.value || ''
+        };
+
+        try {
+          const res = await fetch('/api/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error || 'Unable to save message.');
+          }
+
+          setStatus('Message saved! Check the list below.', true);
+          form.reset();
+          refreshMessages();
+        } catch (err) {
+          setStatus(err.message || 'Something went wrong. Is the server running?', false);
+        }
+      });
+
+      refreshMessages();
+    })();
   </script>
 
 </body>
