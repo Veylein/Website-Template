@@ -202,7 +202,8 @@
           return;
         }
 
-        messages.slice().reverse().forEach(entry => {
+        for (let i = messages.length - 1; i >= 0; i -= 1) {
+          const entry = messages[i];
           const li = document.createElement('li');
           const meta = document.createElement('div');
           meta.className = 'message-meta';
@@ -212,7 +213,7 @@
           li.appendChild(meta);
           li.appendChild(text);
           listEl.appendChild(li);
-        });
+        }
       }
 
       async function refreshMessages() {

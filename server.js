@@ -10,6 +10,7 @@ const PUBLIC_DIR = __dirname;
 const DATA_DIR = path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'messages.json');
 const MAX_BODY_SIZE = 1e6; // 1MB safety limit
+const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -126,16 +127,14 @@ async function handleApi(req, res, url) {
       const name = sanitize(body.name);
       const email = sanitize(body.email);
       const role = sanitize(body.role || 'guest');
-      const rawMessage = String(body.message ?? '');
-      const message = sanitize(rawMessage);
+      const message = sanitize(String(body.message ?? ''));
 
       if (!name || !email || !message) {
         sendJSON(res, 400, { error: 'Name, email, and message are required.' });
         return true;
       }
 
-      const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-      if (!emailPattern.test(email)) {
+      if (!EMAIL_REGEX.test(email)) {
         sendJSON(res, 400, { error: 'Please provide a valid email.' });
         return true;
       }
@@ -173,7 +172,12 @@ function serveStatic(req, res, url) {
   const requestedPath = url.pathname === '/' ? '/index.html' : url.pathname;
   const decoded = decodeURIComponent(requestedPath);
   const normalized = path.normalize(decoded);
-  const safePath = path.resolve(PUBLIC_DIR, '.' + normalized);
+  if (normalized.startsWith('..') || path.isAbsolute(normalized)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Forbidden');
+    return;
+  }
+  const safePath = path.resolve(path.join(PUBLIC_DIR, normalized));
 
   if (!safePath.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
