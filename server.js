@@ -7,6 +7,7 @@ const { randomUUID } = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = __dirname;
+const PUBLIC_DIR_RESOLVED = path.resolve(PUBLIC_DIR).toLowerCase();
 const DATA_DIR = path.join(__dirname, 'data');
 const DATA_FILE = path.join(DATA_DIR, 'messages.json');
 const MAX_BODY_SIZE = 1e6; // 1MB safety limit
@@ -178,6 +179,11 @@ function serveStatic(req, res, url) {
     return;
   }
   const safePath = path.resolve(path.join(PUBLIC_DIR, normalized));
+  if (!safePath.toLowerCase().startsWith(PUBLIC_DIR_RESOLVED)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Forbidden');
+    return;
+  }
 
   if (!safePath.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
