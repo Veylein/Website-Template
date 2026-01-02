@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const fsp = fs.promises;
 const path = require('path');
 const { URL } = require('url');
 const { randomUUID } = require('crypto');
@@ -23,29 +24,36 @@ const MIME_TYPES = {
 };
 
 function sanitize(value) {
-  return String(value || '').trim().replace(/[<>]/g, '');
+  return String(value ?? '')
+    .trim()
+    .replace(/[&<>"']/g, (ch) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[ch]);
 }
 
-function ensureDataFile() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, '[]', 'utf8');
+async function ensureDataFile() {
+  await fsp.mkdir(DATA_DIR, { recursive: true });
+  try {
+    await fsp.access(DATA_FILE);
+  } catch {
+    await fsp.writeFile(DATA_FILE, '[]', 'utf8');
   }
 }
 
-function readMessages() {
-  ensureDataFile();
-  const raw = fs.readFileSync(DATA_FILE, 'utf8');
+async function readMessages() {
+  await ensureDataFile();
+  const raw = await fsp.readFile(DATA_FILE, 'utf8');
   const safe = raw && raw.trim() ? raw : '[]';
   return JSON.parse(safe);
 }
 
-function writeMessages(messages) {
-  ensureDataFile();
-  fs.writeFileSync(DATA_FILE, JSON.stringify(messages, null, 2));
+async function writeMessages(messages) {
+  await ensureDataFile();
+  await fsp.writeFile(DATA_FILE, JSON.stringify(messages, null, 2));
 }
 
 function sendJSON(res, statusCode, payload) {
@@ -84,7 +92,7 @@ function parseBody(req) {
   });
 }
 
-function handleApi(req, res, url) {
+async function handleApi(req, res, url) {
   if (url.pathname !== '/api/messages') return false;
 
   if (req.method === 'OPTIONS') {
@@ -93,50 +101,51 @@ function handleApi(req, res, url) {
   }
 
   if (req.method === 'GET') {
-    const messages = readMessages();
+    const messages = await readMessages();
     sendJSON(res, 200, { messages });
     return true;
   }
 
   if (req.method === 'POST') {
-    parseBody(req)
-      .then(body => {
-        const name = sanitize(body.name);
-        const email = sanitize(body.email);
-        const role = sanitize(body.role || 'guest');
-        const message = sanitize(body.message);
+    try {
+      const body = await parseBody(req);
+      const name = sanitize(body.name);
+      const email = sanitize(body.email);
+      const role = sanitize(body.role || 'guest');
+      const message = sanitize(body.message);
 
-        if (!name || !email || !message) {
-          sendJSON(res, 400, { error: 'Name, email, and message are required.' });
-          return;
-        }
+      if (!name || !email || !message) {
+        sendJSON(res, 400, { error: 'Name, email, and message are required.' });
+        return true;
+      }
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-        if (!emailPattern.test(email)) {
-          sendJSON(res, 400, { error: 'Please provide a valid email.' });
-          return;
-        }
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!emailPattern.test(email)) {
+        sendJSON(res, 400, { error: 'Please provide a valid email.' });
+        return true;
+      }
 
-        if (message.length > 1000) {
-          sendJSON(res, 400, { error: 'Message is too long. Keep it under 1000 characters.' });
-          return;
-        }
+      if (message.length > 1000) {
+        sendJSON(res, 400, { error: 'Message is too long. Keep it under 1000 characters.' });
+        return true;
+      }
 
-        const messages = readMessages();
-        const entry = {
-          id: randomUUID(),
-          name,
-          email,
-          role,
-          message,
-          createdAt: new Date().toISOString()
-        };
+      const messages = await readMessages();
+      const entry = {
+        id: randomUUID(),
+        name,
+        email,
+        role,
+        message,
+        createdAt: new Date().toISOString()
+      };
 
-        messages.push(entry);
-        writeMessages(messages);
-        sendJSON(res, 201, { message: 'Saved', entry });
-      })
-      .catch(() => sendJSON(res, 400, { error: 'Invalid JSON payload.' }));
+      messages.push(entry);
+      await writeMessages(messages);
+      sendJSON(res, 201, { message: 'Saved', entry });
+    } catch (err) {
+      sendJSON(res, 400, { error: 'Invalid JSON payload.' });
+    }
 
     return true;
   }
@@ -177,11 +186,16 @@ function serveStatic(req, res, url) {
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
 
-  if (handleApi(req, res, url)) {
-    return;
-  }
-
-  serveStatic(req, res, url);
+  Promise.resolve(handleApi(req, res, url))
+    .then((handled) => {
+      if (handled) return;
+      serveStatic(req, res, url);
+    })
+    .catch((err) => {
+      console.error('Server error', err);
+      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'Server error' }));
+    });
 });
 
 server.listen(PORT, () => {
