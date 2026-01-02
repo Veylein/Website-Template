@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
+const { randomUUID } = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = __dirname;
@@ -33,8 +34,9 @@ function ensureDataFile() {
 
 function readMessages() {
   ensureDataFile();
-  const raw = fs.readFileSync(DATA_FILE, 'utf8') || '[]';
-  return JSON.parse(raw);
+  const raw = fs.readFileSync(DATA_FILE, 'utf8');
+  const safe = raw && raw.trim() ? raw : '[]';
+  return JSON.parse(safe);
 }
 
 function writeMessages(messages) {
@@ -57,11 +59,12 @@ function parseBody(req) {
     let body = '';
 
     req.on('data', chunk => {
-      body += chunk;
-      if (body.length > MAX_BODY_SIZE) {
+      if (body.length + chunk.length > MAX_BODY_SIZE) {
         reject(new Error('Payload too large'));
         req.destroy();
+        return;
       }
+      body += chunk;
     });
 
     req.on('end', () => {
@@ -117,7 +120,7 @@ function handleApi(req, res, url) {
 
         const messages = readMessages();
         const entry = {
-          id: Date.now(),
+          id: randomUUID(),
           name,
           email,
           role,

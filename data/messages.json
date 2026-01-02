@@ -1,10 +1,1 @@
-[
-  {
-    "id": 1767333333481,
-    "name": "Sample User",
-    "email": "user@example.com",
-    "role": "student",
-    "message": "Hello from the full-stack demo!",
-    "createdAt": "2026-01-02T05:55:33.481Z"
-  }
-]
+[]
